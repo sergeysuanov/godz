@@ -1,0 +1,97 @@
+package main
+
+import (
+	"fmt"
+	"strings"
+)
+
+func parseTest(sentences []string, chars []rune) [][]int {
+	result := make([][]int, len(sentences))
+
+	for i, sentence := range sentences {
+		words := strings.Fields(sentence)
+		lastWord := words[len(words)-1]
+		result[i] = make([]int, len(chars))
+
+		for j, char := range chars {
+			result[i][j] = strings.LastIndexRune(lastWord, char)
+		}
+	}
+
+	return result
+}
+
+func main() {
+	sentences := []string{"Hello world", "Hello Skillbox", "Привет Мир", "Привет Skillbox"}
+	chars := []rune{'H', 'E', 'L', 'П', 'М'}
+	result := parseTest(sentences, chars)
+
+	for i, row := range result {
+		fmt.Printf("Sentence %d:\n", i)
+		for j, index := range row {
+			fmt.Printf("'%c' position %d\n", chars[j], index)
+		}
+	}
+}
+
+
+package main
+
+import (
+	"fmt"
+	"strings"
+)
+
+func parseTest(sentences []string, chars []rune) [][]int {
+	result := make([][]int, len(sentences))
+
+	for i, sentence := range sentences {
+		words := strings.Fields(sentence)
+		lastWord := words[len(words)-1]
+		result[i] = make([]int, len(chars))
+
+		for j, char := range chars {
+			result[i][j] = strings.LastIndexRune(lastWord, char)
+		}
+	}
+
+	return result
+}
+
+func main() {
+	sentences := []string{"Hello world", "Hello Skillbox", "Привет Мир", "Привет Skillbox"}
+	chars := []rune{'H', 'E', 'L', 'П', 'М'}
+	result := parseTest(sentences, chars)
+
+	for i, row := range result {
+		fmt.Printf("Sentence %d:\n", i)
+		for j, index := range row {
+			fmt.Printf("'%c' position %d\n", chars[j], index)
+		}
+	}
+}
+
+
+package main
+
+import (
+	"fmt"
+	"sort"
+)
+
+func main() {
+	arr := []int{12, 11, 13, 5, 6}
+	fmt.Println("Unsorted array is:", arr)
+
+	// Анонимная функция для сортировки и переворота
+	sort.Slice(arr, func(i, j int) bool {
+		return arr[i] > arr[j]
+	})
+
+	fmt.Println("Sorted array in reverse order is:", arr)
+}
+
+
+
+
+

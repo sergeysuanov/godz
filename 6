@@ -1,0 +1,291 @@
+package main
+
+import (
+	"fmt"
+)
+
+// mergeArrays merges two sorted arrays into one sorted array
+func mergeArrays(arr1, arr2 []int) []int {
+	result := make([]int, len(arr1)+len(arr2))
+	i, j, k := 0, 0, 0
+
+	for i < len(arr1) && j < len(arr2) {
+		if arr1[i] < arr2[j] {
+			result[k] = arr1[i]
+			i++
+		} else {
+			result[k] = arr2[j]
+			j++
+		}
+		k++
+	}
+
+	for i < len(arr1) {
+		result[k] = arr1[i]
+		i++
+		k++
+	}
+
+	for j < len(arr2) {
+		result[k] = arr2[j]
+		j++
+		k++
+	}
+
+	return result
+}
+
+func main() {
+	arr1 := []int{1, 3, 5, 7}
+	arr2 := []int{2, 4, 6, 8, 10}
+	mergedArr := mergeArrays(arr1, arr2)
+	fmt.Println("Merged Array:", mergedArr)
+}
+
+
+
+package main
+
+import (
+	"fmt"
+)
+
+// bubbleSort sorts an array using the bubble sort algorithm
+func bubbleSort(arr []int) {
+	n := len(arr)
+	for i := 0; i < n; i++ {
+		for j := 0; j < n-i-1; j++ {
+			if arr[j] > arr[j+1] {
+				arr[j], arr[j+1] = arr[j+1], arr[j]
+			}
+		}
+	}
+}
+
+func main() {
+	arr := []int{5, 2, 9, 1, 5, 6}
+	bubbleSort(arr)
+	fmt.Println("Sorted Array:", arr)
+}
+
+
+
+
+
+package main
+
+import (
+	"fmt"
+)
+
+// bubbleSort sorts an array using the bubble sort algorithm
+func bubbleSort(arr []int) {
+	n := len(arr)
+	for i := 0; i < n; i++ {
+		for j := 0; j < n-i-1; j++ {
+			if arr[j] > arr[j+1] {
+				arr[j], arr[j+1] = arr[j+1], arr[j]
+			}
+		}
+	}
+}
+
+func main() {
+	arr := []int{5, 2, 9, 1, 5, 6}
+	bubbleSort(arr)
+	fmt.Println("Sorted Array:", arr)
+}
+
+
+
+
+
+package main
+
+import "fmt"
+
+// determinant3x3 calculates the determinant of a 3x3 matrix
+func determinant3x3(matrix [3][3]int) int {
+	return matrix[0][0]*(matrix[1][1]*matrix[2][2]-matrix[1][2]*matrix[2][1]) -
+		matrix[0][1]*(matrix[1][0]*matrix[2][2]-matrix[1][2]*matrix[2][0]) +
+		matrix[0][2]*(matrix[1][0]*matrix[2][1]-matrix[1][1]*matrix[2][0])
+}
+
+func main() {
+	matrix := [3][3]int{
+		{1, 2, 3},
+		{4, 5, 6},
+		{7, 8, 9},
+	}
+	fmt.Println("Determinant:", determinant3x3(matrix))
+}
+
+
+
+
+package main
+
+import "fmt"
+
+// multiplyMatrices multiplies two matrices of sizes 3x5 and 5x4
+func multiplyMatrices(a [3][5]int, b [5][4]int) [3][4]int {
+	var result [3][4]int
+	for i := 0; i < 3; i++ {
+		for j := 0; j < 4; j++ {
+			sum := 0
+			for k := 0; k < 5; k++ {
+				sum += a[i][k] * b[k][j]
+			}
+			result[i][j] = sum
+		}
+	}
+	return result
+}
+
+func main() {
+	a := [3][5]int{
+		{1, 2, 3, 4, 5},
+		{6, 7, 8, 9, 10},
+		{11, 12, 13, 14, 15},
+	}
+
+	b := [5][4]int{
+		{1, 2, 3, 4},
+		{5, 6, 7, 8},
+		{9, 10, 11, 12},
+		{13, 14, 15, 16},
+		{17, 18, 19, 20},
+	}
+
+	result := multiplyMatrices(a, b)
+	fmt.Println("Resultant Matrix:")
+	for _, row := range result {
+		fmt.Println(row)
+	}
+}
+
+
+
+
+package main
+
+import (
+	"fmt"
+)
+
+// calculate performs the given calculation
+func calculate(x int16, y uint8, z float32) float32 {
+	return 2*float32(x) + float32(y*y) - 3/z
+}
+
+func main() {
+	var x int16 = 10
+	var y uint8 = 3
+	var z float32 = 4.0
+	fmt.Println("Result:", calculate(x, y, z))
+}
+
+
+
+
+package main
+
+import "fmt"
+
+// wrapFunction wraps a given function with defer
+func wrapFunction(f func(int, int) int) {
+	defer func() {
+		fmt.Println("Function executed")
+	}()
+	result := f(3, 4)
+	fmt.Println("Result:", result)
+}
+
+func main() {
+	wrapFunction(func(a, b int) int {
+		return a + b
+	})
+
+	wrapFunction(func(a, b int) int {
+		return a * b
+	})
+
+	wrapFunction(func(a, b int) int {
+		return a - b
+	})
+}
+
+
+
+
+package main
+
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+// countAfterNumber counts the number of elements after a specified number in an array
+func countAfterNumber(arr []int, number int) int {
+	index := -1
+	for i, v := range arr {
+		if v == number {
+			index = i
+			break
+		}
+	}
+	if index == -1 {
+		return 0
+	}
+	return len(arr) - index - 1
+}
+
+func main() {
+	rand.Seed(time.Now().UnixNano())
+	arr := make([]int, 20)
+	for i := range arr {
+		arr[i] = rand.Intn(100)
+	}
+	fmt.Println("Array:", arr)
+
+	var number int
+	fmt.Print("Enter a number: ")
+	fmt.Scan(&number)
+
+	count := countAfterNumber(arr, number)
+	fmt.Printf("Number of elements after %d: %d\n", number, count)
+}
+
+
+
+package main
+
+import "fmt"
+
+// findFirstOccurrence finds the first occurrence of a number in a sorted array
+func findFirstOccurrence(arr []int, number int) int {
+	for i, v := range arr {
+		if v == number {
+			return i
+		}
+	}
+	return -1
+}
+
+func main() {
+	arr := []int{1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	fmt.Println("Array:", arr)
+
+	var number int
+	fmt.Print("Enter a number: ")
+	fmt.Scan(&number)
+
+	index := findFirstOccurrence(arr, number)
+	if index == -1 {
+		fmt.Printf("Number %d not found in array.\n", number)
+	} else {
+		fmt.Printf("First occurrence of %d is at index %d.\n", number, index)
+	}
+}
+

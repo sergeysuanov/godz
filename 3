@@ -1,0 +1,194 @@
+package main
+
+import (
+	"fmt"
+	"io/ioutil"
+	"os"
+	"strings"
+)
+
+func main() {
+	args := os.Args[1:]
+	if len(args) == 0 {
+		fmt.Println("Usage: go run main.go <file1> <file2> [<resultFile>]")
+		return
+	}
+
+	var contents []string
+
+	for _, filename := range args {
+		data, err := ioutil.ReadFile(filename)
+		if err != nil {
+			fmt.Println("Error reading file:", err)
+			return
+		}
+		contents = append(contents, string(data))
+	}
+
+	joinedContent := strings.Join(contents, "\n")
+
+	if len(args) > 2 {
+		resultFilename := args[2]
+		err := ioutil.WriteFile(resultFilename, []byte(joinedContent), 0644)
+		if err != nil {
+			fmt.Println("Error writing result file:", err)
+			return
+		}
+	} else {
+		fmt.Println(joinedContent)
+	}
+}
+
+
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
+
+type Student struct {
+	name  string
+	age   int
+	grade int
+}
+
+func newStudent(name string, age, grade int) *Student {
+	return &Student{name, age, grade}
+}
+
+func main() {
+	students := make(map[string]*Student)
+
+	scanner := bufio.NewScanner(os.Stdin)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			break
+		}
+		var name string
+		var age, grade int
+		_, err := fmt.Sscanf(line, "%s %d %d", &name, &age, &grade)
+		if err != nil {
+			fmt.Println("Error parsing input:", err)
+			return
+		}
+		student := newStudent(name, age, grade)
+		students[name] = student
+	}
+
+	fmt.Println("Students from the storage:")
+	for name, student := range students {
+		fmt.Printf("%s %d %d\n", name, student.age, student.grade)
+	}
+}
+
+
+// Пакет для чтения и записи файлов
+package file
+
+import (
+	"io/ioutil"
+)
+
+func ReadFile(filename string) ([]byte, error) {
+	return ioutil.ReadFile(filename)
+}
+
+func WriteFile(filename string, data []byte) error {
+	return ioutil.WriteFile(filename, data, 0644)
+}
+
+
+
+
+
+// Пакет для работы с данными студентов
+package student
+
+type Student struct {
+	Name  string
+	Age   int
+	Grade int
+}
+
+func New(name string, age, grade int) *Student {
+	return &Student{Name: name, Age: age, Grade: grade}
+}
+
+
+
+
+// Пакет для обработки ввода пользовательских данных
+package input
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+	"strings"
+
+	"github.com/file"
+	"github.com/student"
+)
+
+func ReadStudents() (map[string]*student.Student, error) {
+	students := make(map[string]*student.Student)
+
+	scanner := bufio.NewScanner(os.Stdin)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			break
+		}
+		fields := strings.Fields(line)
+		if len(fields) < 3 {
+			return nil, fmt.Errorf("input format error")
+		}
+		name := fields[0]
+		age, err := strconv.Atoi(fields[1])
+		if err != nil {
+			return nil, err
+		}
+		grade, err := strconv.Atoi(fields[2])
+		if err != nil {
+			return nil, err
+		}
+		students[name] = student.New(name, age, grade)
+	}
+
+	return students, nil
+}
+
+func PrintStudents(students map[string]*student.Student) {
+	fmt.Println("Students from the storage:")
+	for name, student := range students {
+		fmt.Printf("%s %d %d\n", name, student.Age, student.Grade)
+	}
+}
+
+
+
+
+// Основной файл main.go
+package main
+
+import (
+	"github.com/file"
+	"github.com/input"
+	"github.com/student"
+)
+
+func main() {
+	students, err := input.ReadStudents()
+	if err != nil {
+		panic(err)
+	}
+
+	input.PrintStudents(students)
+}
+

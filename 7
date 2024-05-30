@@ -1,0 +1,344 @@
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"time"
+)
+
+func main() {
+	file, err := os.OpenFile("log.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		fmt.Println("Error opening file:", err)
+		return
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(os.Stdin)
+	lineNumber := 1
+
+	for {
+		fmt.Print("Enter message (type 'exit' to quit): ")
+		if scanner.Scan() {
+			text := scanner.Text()
+			if text == "exit" {
+				break
+			}
+			timestamp := time.Now().Format("2006-01-02 15:04:05")
+			logMessage := fmt.Sprintf("%d %s %s\n", lineNumber, timestamp, text)
+			if _, err := file.WriteString(logMessage); err != nil {
+				fmt.Println("Error writing to file:", err)
+				return
+			}
+			lineNumber++
+		} else {
+			fmt.Println("Error reading input:", scanner.Err())
+			break
+		}
+	}
+}
+
+
+
+
+
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
+
+func main() {
+	file, err := os.Open("log.txt")
+	if err != nil {
+		fmt.Println("Error opening file:", err)
+		return
+	}
+	defer file.Close()
+
+	fileInfo, err := file.Stat()
+	if err != nil {
+		fmt.Println("Error getting file info:", err)
+		return
+	}
+
+	if fileInfo.Size() == 0 {
+		fmt.Println("The file is empty")
+		return
+	}
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		fmt.Println(scanner.Text())
+	}
+
+	if err := scanner.Err(); err != nil {
+		fmt.Println("Error reading file:", err)
+	}
+}
+
+
+
+package main
+
+import (
+	"fmt"
+	"os"
+)
+
+func main() {
+	file, err := os.OpenFile("readonly.txt", os.O_CREATE|os.O_RDONLY, 0444)
+	if err != nil {
+		fmt.Println("Error creating file:", err)
+		return
+	}
+	file.Close()
+
+	file, err = os.OpenFile("readonly.txt", os.O_WRONLY, 0444)
+	if err != nil {
+		fmt.Println("File is readonly, cannot write")
+	} else {
+		fmt.Println("Unexpected: able to open file for writing")
+		file.Close()
+	}
+}
+v
+
+
+
+
+package main
+
+import (
+	"fmt"
+	"io/ioutil"
+	"os"
+	"time"
+)
+
+// Задание 1 с использованием ioutil
+func main() {
+	for {
+		fmt.Print("Enter message (type 'exit' to quit): ")
+		var input string
+		fmt.Scanln(&input)
+		if input == "exit" {
+			break
+		}
+
+		timestamp := time.Now().Format("2006-01-02 15:04:05")
+		logMessage := fmt.Sprintf("%s %s\n", timestamp, input)
+		err := ioutil.WriteFile("log.txt", []byte(logMessage), os.ModeAppend)
+		if err != nil {
+			fmt.Println("Error writing to file:", err)
+			return
+		}
+	}
+}
+
+
+
+package main
+
+import (
+	"fmt"
+	"io/ioutil"
+	"os"
+)
+
+// Задание 2 с использованием ioutil
+func main() {
+	data, err := ioutil.ReadFile("log.txt")
+	if err != nil {
+		fmt.Println("Error reading file:", err)
+		return
+	}
+
+	if len(data) == 0 {
+		fmt.Println("The file is empty")
+		return
+	}
+
+	fmt.Println(string(data))
+}
+
+
+
+
+package main
+
+import (
+	"fmt"
+)
+
+// generateParenthesis generates all combinations of well-formed parentheses
+func generateParenthesis(n int) []string {
+	result := []string{}
+	var generate func(p string, left, right int)
+	generate = func(p string, left, right int) {
+		if len(p) == n*2 {
+			result = append(result, p)
+			return
+		}
+		if left < n {
+			generate(p+"(", left+1, right)
+		}
+		if right < left {
+			generate(p+")", left, right+1)
+		}
+	}
+	generate("", 0, 0)
+	return result
+}
+
+func main() {
+	var n int
+	fmt.Print("Enter the number of pairs of parentheses: ")
+	fmt.Scan(&n)
+	combinations := generateParenthesis(n)
+	fmt.Println(combinations)
+}
+
+
+
+
+package main
+
+import (
+	"fmt"
+)
+
+// sumEvenNumbersInRange calculates the sum of even numbers in a given range
+func sumEvenNumbersInRange(a, b int) int {
+	if a > b {
+		a, b = b, a
+	}
+
+	sum := 0
+	for i := a; i <= b; i++ {
+		if i%2 == 0 {
+			sum += i
+		}
+	}
+	return sum
+}
+
+func main() {
+	a, b := 2, 10
+	fmt.Printf("Sum of even numbers between %d and %d is %d\n", a, b, sumEvenNumbersInRange(a, b))
+}
+
+
+
+
+package main
+
+import (
+	"fmt"
+)
+
+// swap swaps the values of two integers
+func swap(a, b *int) {
+	*a, *b = *b, *a
+}
+
+func main() {
+	x, y := 5, 10
+	fmt.Printf("Before swap: x = %d, y = %d\n", x, y)
+	swap(&x, &y)
+	fmt.Printf("After swap: x = %d, y = %d\n", x, y)
+}
+
+
+
+
+package main
+
+import (
+	"fmt"
+)
+
+// isEven returns true if the number is even, otherwise false
+func isEven(n int) bool {
+	return n%2 == 0
+}
+
+func main() {
+	var number int
+	fmt.Print("Enter a number: ")
+	fmt.Scan(&number)
+	if isEven(number) {
+		fmt.Println("The number is even")
+	} else {
+		fmt.Println("The number is odd")
+	}
+}
+
+
+
+
+package main
+
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+// generatePoints generates three random points in a 2D space
+func generatePoints() (int, int, int, int, int, int) {
+	rand.Seed(time.Now().UnixNano())
+	return rand.Intn(100), rand.Intn(100), rand.Intn(100), rand.Intn(100), rand.Intn(100), rand.Intn(100)
+}
+
+// transformPoints transforms the coordinates of points
+func transformPoints(x1, y1, x2, y2, x3, y3 int) (newX1, newY1, newX2, newY2, newX3, newY3 int) {
+	newX1, newY1 = 2*x1+10, -3*y1-5
+	newX2, newY2 = 2*x2+10, -3*y2-5
+	newX3, newY3 = 2*x3+10, -3*y3-5
+	return
+}
+
+func main() {
+	x1, y1, x2, y2, x3, y3 := generatePoints()
+	fmt.Printf("Original points: (%d, %d), (%d, %d), (%d, %d)\n", x1, y1, x2, y2, x3, y3)
+	newX1, newY1, newX2, newY2, newX3, newY3 := transformPoints(x1, y1, x2, y2, x3, y3)
+	fmt.Printf("Transformed points: (%d, %d), (%d, %d), (%d, %d)\n", newX1, newY1, newX2, newY2, newX3, newY3)
+}
+
+
+
+
+
+package main
+
+import (
+	"fmt"
+)
+
+// multiply returns the result of multiplying the input by 2
+func multiply(input int) (result int) {
+	result = input * 2
+	return
+}
+
+// add returns the result of adding 5 to the input
+func add(input int) (result int) {
+	result = input + 5
+	return
+}
+
+func main() {
+	var number int
+	fmt.Print("Enter a number: ")
+	fmt.Scan(&number)
+
+	result := multiply(number)
+	fmt.Printf("After multiplication: %d\n", result)
+
+	result = add(result)
+	fmt.Printf("After addition: %d\n", result)
+}

@@ -1,0 +1,189 @@
+package main
+
+import (
+	"fmt"
+	"io/ioutil"
+	"os"
+)
+
+func main() {
+	args := os.Args[1:]
+
+	if len(args) == 0 {
+		fmt.Println("Usage: go run main.go <file1> <file2> [<resultFile>]")
+		return
+	}
+
+	var content []byte
+
+	for _, filename := range args {
+		data, err := ioutil.ReadFile(filename)
+		if err != nil {
+			fmt.Printf("Error reading %s: %s\n", filename, err)
+			return
+		}
+		content = append(content, data...)
+	}
+
+	fmt.Println(string(content))
+}
+
+
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+	"strings"
+)
+
+type Student struct {
+	name  string
+	age   int
+	grade int
+}
+
+func newStudent(name string, age, grade int) *Student {
+	return &Student{name, age, grade}
+}
+
+func main() {
+	students := make(map[string]*Student)
+
+	scanner := bufio.NewScanner(os.Stdin)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			break
+		}
+		fields := strings.Fields(line)
+		if len(fields) != 3 {
+			fmt.Println("Invalid input format. Expected: name age grade")
+			continue
+		}
+		name := fields[0]
+		age, err := strconv.Atoi(fields[1])
+		if err != nil {
+			fmt.Printf("Invalid age for student %s: %s\n", name, err)
+			continue
+		}
+		grade, err := strconv.Atoi(fields[2])
+		if err != nil {
+			fmt.Printf("Invalid grade for student %s: %s\n", name, err)
+			continue
+		}
+		students[name] = newStudent(name, age, grade)
+	}
+
+	fmt.Println("Students from the storage:")
+	for name, student := range students {
+		fmt.Printf("%s %d %d\n", student.name, student.age, student.grade)
+	}
+}
+
+
+
+// Пакет file
+package file
+
+import "io/ioutil"
+
+func ReadFile(filename string) ([]byte, error) {
+	return ioutil.ReadFile(filename)
+}
+
+func WriteFile(filename string, data []byte) error {
+	return ioutil.WriteFile(filename, data, 0644)
+}
+
+
+
+// Пакет student
+package student
+
+type Student struct {
+	Name  string
+	Age   int
+	Grade int
+}
+
+func New(name string, age, grade int) *Student {
+	return &Student{Name: name, Age: age, Grade: grade}
+}
+
+
+
+// Пакет input
+package input
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+	"strings"
+
+	"github.com/student"
+)
+
+func ReadStudents() (map[string]*student.Student, error) {
+	students := make(map[string]*student.Student)
+
+	scanner := bufio.NewScanner(os.Stdin)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			break
+		}
+		fields := strings.Fields(line)
+		if len(fields) != 3 {
+			return nil, fmt.Errorf("invalid input format")
+		}
+		name := fields[0]
+		age, err := strconv.Atoi(fields[1])
+		if err != nil {
+			return nil, fmt.Errorf("invalid age: %s", err)
+		}
+		grade, err := strconv.Atoi(fields[2])
+		if err != nil {
+			return nil, fmt.Errorf("invalid grade: %s", err)
+		}
+		students[name] = student.New(name, age, grade)
+	}
+
+	return students, nil
+}
+
+func PrintStudents(students map[string]*student.Student) {
+	fmt.Println("Students from the storage:")
+	for name, student := range students {
+		fmt.Printf("%s %d %d\n", student.Name, student.Age, student.Grade)
+	}
+}
+
+
+
+
+// Основной пакет main
+package main
+
+import (
+	"github.com/file"
+	"github.com/input"
+)
+
+func main() {
+	students, err := input.ReadStudents()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	input.PrintStudents(students)
+}
+
+
